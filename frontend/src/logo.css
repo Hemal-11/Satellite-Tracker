@@ -1,0 +1,38 @@
+/* ================================
+   BRANDING & LOGO
+================================ */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sidebar-brand h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-logo-sidebar {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.4));
+}
+
+.mobile-title-flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-logo-mobile {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}

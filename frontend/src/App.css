@@ -1,0 +1,910 @@
+/* ================================
+   GLOBAL RESET
+================================ */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* ================================
+   APP LAYOUT
+================================ */
+.app-root {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: white;
+}
+
+/* ================================
+   SIDEBAR (DESKTOP DEFAULT)
+================================ */
+.sidebar {
+  width: 260px;
+  padding: 12px;
+  padding-bottom: 90px; /* buffer for time slider */
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-right: transparent;
+  z-index: 10;
+  pointer-events: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Edge/Safari */
+}
+
+.sidebar * {
+  pointer-events: auto;
+}
+
+/* ================================
+   TIME SLIDER PANEL
+================================ */
+.time-slider-panel {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 15, 30, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.time-slider-panel input[type="range"] {
+  width: 200px;
+  accent-color: #ffd700;
+}
+
+.reset-time-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.reset-time-btn:hover {
+  background: rgba(255, 77, 77, 0.3);
+}
+
+@media (max-width: 600px) {
+  .time-slider-panel {
+    bottom: 80px;
+    width: 90%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* ================================
+   SEARCH
+================================ */
+.search-input {
+  width: 100%;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+}
+
+/* ================================
+   SEARCH RESULTS
+================================ */
+.search-results {
+  background: rgba(10, 10, 15, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(30, 144, 255, 0.15);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.search-item {
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-item:last-child {
+  border-bottom: none;
+}
+
+.search-item:hover,
+.search-item:active,
+.search-item.selected {
+  background: rgba(30, 144, 255, 0.2);
+  color: #fff;
+}
+
+/* ================================
+   FILTERS
+================================ */
+h4 {
+  margin: 10px 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+/* ================================
+   SAT INFO
+================================ */
+.sat-info {
+  word-break: break-word;
+  /* Prevent long strings from causing x-overflow */
+}
+
+/* ================================
+   SAT COUNT
+================================ */
+.sat-count {
+  margin: 6px 0 10px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ================================
+   MAP CONTAINER
+================================ */
+.map-container,
+.cesium-container {
+  position: absolute;
+  inset: 0;
+}
+
+/* ================================
+   REMOVE CESIUM UI
+================================ */
+.cesium-widget-credits,
+.cesium-viewer-bottom,
+.cesium-viewer-animationContainer,
+.cesium-viewer-timelineContainer {
+  display: none !important;
+}
+
+.cesium-viewer,
+.cesium-viewer canvas {
+  overflow: hidden !important;
+}
+
+/* (Legacy pass panel and pass card CSS removed to consolidate styles at bottom of file) */
+
+/* ================================
+   BUTTONS
+================================ */
+.primary-btn {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: #1e90ff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* ================================
+   TEXT HELPERS
+================================ */
+.dim {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 13px;
+}
+
+.countdown {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffd700;
+  text-align: center;
+}
+
+/* ======================================================
+   📱 MOBILE MODE (NON-BREAKING, ADDITIVE)
+====================================================== */
+@media (max-width: 900px) {
+
+  /* Sidebar becomes slide drawer */
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 80vw;
+    max-width: 320px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 20;
+    overflow-y: auto;
+    /* ✅ mobile only */
+    -webkit-overflow-scrolling: touch;
+    background: rgba(15, 15, 18, 0.98);
+    backdrop-filter: blur(10px);
+    padding-top: 60px;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Cesium always full screen */
+  .cesium-container {
+    inset: 0;
+  }
+
+  /* Pass panel becomes bottom sheet handled by latter CSS blocks */
+
+  .pass-panel {
+    padding-bottom: 30px !important;
+  }
+
+  /* Bigger touch targets */
+  .primary-btn,
+  .secondary-btn {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  label {
+    font-size: 15px;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .search-input {
+    font-size: 16px;
+    padding: 10px;
+  }
+}
+
+/* ================================
+   MOBILE HEADER
+================================ */
+.mobile-header {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobile-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(10px);
+    z-index: 30;
+  }
+
+  .mobile-menu-btn {
+    font-size: 22px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  .mobile-title {
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+}
+
+/* ================================
+   VIEW MODE TOGGLE
+================================ */
+.view-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 30;
+}
+
+.view-toggle button {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  cursor: pointer;
+}
+
+.view-toggle button.active {
+  background: #1e90ff;
+  border-color: #1e90ff;
+}
+
+/* Placeholder until SkyView is added */
+.sky-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* ================================
+   VIEW MODE TOGGLE (GLOBAL UI)
+================================ */
+.view-toggle {
+  position: fixed;
+  top: 12px;
+  left: 280px;
+  /* desktop sidebar width + gap */
+  display: flex;
+  gap: 8px;
+  z-index: 30;
+}
+
+.view-toggle button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(30, 30, 40, 0.85);
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.view-toggle button.active {
+  background: #1e90ff;
+}
+
+/* 📱 Mobile adjustment */
+@media (max-width: 900px) {
+  .view-toggle {
+    left: 12px;
+    top: 60px;
+    /* below mobile header */
+  }
+}
+
+/* ======================================================
+   🔧 ADDITIVE FIXES — DO NOT REMOVE EXISTING STYLES
+   ====================================================== */
+
+
+/* ------------------------------------------------------
+   1️⃣ FIX: DESKTOP SIDEBAR SCROLLBAR
+   ------------------------------------------------------ */
+@media (min-width: 901px) {
+  .sidebar {
+    overflow-y: auto !important;
+  }
+}
+
+
+/* ------------------------------------------------------
+   2️⃣ FIX: VIEW TOGGLE DUPLICATE DEFINITIONS (SAFE SCOPE)
+   ------------------------------------------------------ */
+
+/* Desktop-only positioning */
+@media (min-width: 901px) {
+  .view-toggle {
+    position: fixed;
+    top: 12px;
+    left: 280px;
+    /* sidebar width */
+    z-index: 30;
+  }
+}
+
+/* Mobile-only positioning */
+@media (max-width: 900px) {
+  .view-toggle {
+    position: fixed;
+    left: 12px;
+    top: 60px;
+    /* below mobile header */
+    z-index: 30;
+  }
+}
+
+
+/* ------------------------------------------------------
+   3️⃣ FIX: SKYVIEW LAYERING (NO UI OVERLAP)
+   ------------------------------------------------------ */
+.sky-view-root {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+/* Ensure UI always stays above SkyView */
+.sidebar,
+.pass-panel,
+.mobile-header,
+.view-toggle {
+  z-index: 30;
+}
+
+
+/* ------------------------------------------------------
+   4️⃣ MOBILE + TOUCH OPTIMIZATION (ANDROID / iOS)
+   ------------------------------------------------------ */
+
+/* Prevent double-tap zoom issues */
+html,
+body {
+  touch-action: manipulation;
+}
+
+/* Smooth scrolling inside mobile sidebar */
+@media (max-width: 900px) {
+  .sidebar {
+    overscroll-behavior: contain;
+  }
+}
+
+/* Canvas touch correctness */
+canvas {
+  touch-action: none;
+}
+
+
+/* ------------------------------------------------------
+   5️⃣ PASS PANEL SAFETY (NO OVERFLOW GLITCHES)
+   ------------------------------------------------------ */
+.pass-panel {
+  overscroll-behavior: contain;
+}
+
+
+/* ------------------------------------------------------
+   6️⃣ VISUAL POLISH — OPTIONAL BUT SAFE
+   ------------------------------------------------------ */
+.primary-btn:active,
+.secondary-btn:active {
+  transform: scale(0.97);
+}
+
+.view-toggle button {
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.view-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ======================================================
+   🔥 FINAL FIXES — PROJECT LOCK-IN (SAFE & ADDITIVE)
+   DO NOT REMOVE ANY PREVIOUS STYLES
+====================================================== */
+
+/* ------------------------------------------------------
+   1️⃣ CESIUM HOME BUTTON FIX (CRITICAL)
+   ------------------------------------------------------ */
+
+/* Elevate the actual toolbar container so it sits above transparent structural overlays */
+.cesium-viewer-toolbar {
+  z-index: 100 !important;
+  pointer-events: auto !important;
+  /* Ensure the container itself can route clicks */
+}
+
+/* Revert overly restrictive pointer blocking to let native button paddings trigger clicks */
+.cesium-button,
+.cesium-home-button {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Ensure SVG lines inside button don't absorb or disrupt the click */
+.cesium-home-button svg {
+  pointer-events: none !important;
+}
+
+/* SkyView must NOT block Cesium clicks */
+.sky-view-root {
+  pointer-events: none;
+}
+
+/* But allow SkyView canvas itself to be interactive */
+.sky-view-root canvas {
+  pointer-events: auto;
+}
+
+
+/* ------------------------------------------------------
+   2️⃣ Z-INDEX ORDER (ABSOLUTE TRUTH TABLE)
+   ------------------------------------------------------ */
+
+/*
+  z-index hierarchy (highest → lowest):
+
+  50  : mobile-header
+  45  : view-toggle
+  40  : pass-panel
+  35  : sidebar
+  10  : SkyView canvas
+   1  : Cesium globe
+*/
+
+.mobile-header {
+  z-index: 50 !important;
+}
+
+.view-toggle {
+  z-index: 45 !important;
+}
+
+.pass-panel {
+  z-index: 40 !important;
+}
+
+.sidebar {
+  z-index: 35 !important;
+}
+
+.sky-view-root {
+  z-index: 10 !important;
+}
+
+.cesium-container {
+  z-index: 1 !important;
+}
+
+
+/* ------------------------------------------------------
+   3️⃣ VIEW TOGGLE — SINGLE SOURCE OF TRUTH
+   ------------------------------------------------------ */
+
+/* Neutralize earlier duplicates safely */
+.view-toggle {
+  position: fixed !important;
+  display: flex;
+  gap: 8px;
+  right: auto !important;
+  /* Prevent stretching across the entire screen width */
+  width: fit-content !important;
+  /* Tight bounding box around the Globe/Sky buttons */
+  pointer-events: none !important;
+}
+
+.view-toggle button {
+  pointer-events: auto !important;
+  /* Ensure globe/sky buttons remain interactable */
+}
+
+/* Desktop placement */
+@media (min-width: 901px) {
+  .view-toggle {
+    top: 12px;
+    left: 310px;
+    /* sidebar width */
+  }
+}
+
+/* Mobile placement */
+@media (max-width: 900px) {
+  .view-toggle {
+    top: 54px;
+    /* below mobile header (48px) + padding gap */
+    left: 12px;
+  }
+}
+
+
+/* ------------------------------------------------------
+   4️⃣ PASS PANEL VISIBILITY GUARANTEE
+   ------------------------------------------------------ */
+
+.pass-panel {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto;
+}
+
+
+/* ------------------------------------------------------
+   5️⃣ SKYVIEW / CESIUM MODE SAFETY
+   ------------------------------------------------------ */
+
+/* Prevent SkyView from hijacking Cesium when hidden */
+.sky-view-root[hidden],
+.sky-view-root.hidden {
+  display: none !important;
+}
+
+
+/* ------------------------------------------------------
+   6️⃣ TOUCH + MOBILE HARDENING (ANDROID / iOS)
+   ------------------------------------------------------ */
+
+html,
+body {
+  touch-action: manipulation;
+}
+
+canvas {
+  touch-action: none;
+}
+
+
+/* ------------------------------------------------------
+   7️⃣ VISUAL STABILITY (NO JITTER)
+   ------------------------------------------------------ */
+
+.primary-btn,
+.secondary-btn,
+.view-toggle button {
+  will-change: transform;
+}
+
+
+/* ------------------------------------------------------
+   8️⃣ DEBUGGING AID (SAFE TO KEEP)
+   ------------------------------------------------------ */
+/*
+If anything ever overlaps again:
+  - Check z-index above
+  - SkyView must NEVER exceed z-index 10
+*/
+/* ================================
+   SKYVIEW SAFETY — CRITICAL FIX
+================================ */
+.sky-view-root {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  /* BELOW UI */
+  pointer-events: auto;
+}
+
+/* Disable SkyView interaction when not visible */
+body:not(.sky-mode) .sky-view-root {
+  display: none;
+}
+
+/* UI MUST ALWAYS WIN */
+.sidebar,
+.pass-panel,
+.mobile-header,
+.view-toggle {
+  position: relative;
+  z-index: 50 !important;
+}
+
+/* ======================================================
+   🚨 CRITICAL FIX — CESIUM UI BLOCKING EVERYTHING
+====================================================== */
+
+/* Cesium container must stay BELOW UI */
+.cesium-container {
+  z-index: 0 !important;
+}
+
+/* All app UI must stay ABOVE Cesium */
+.sidebar,
+.pass-panel,
+.mobile-header,
+.view-toggle {
+  position: relative;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+}
+
+/* Prevent Cesium canvas from stealing all clicks */
+.cesium-viewer canvas {
+  pointer-events: auto;
+}
+
+/* But allow UI clicks to pass normally */
+.app-root {
+  pointer-events: auto;
+}
+
+/* ======================================================
+   🔥 RESTORING THE PASS PANEL & SKYVIEW STYLES
+   ====================================================== */
+
+.pass-panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 340px;
+  max-height: calc(100vh - 24px);
+  background: rgba(18, 18, 20, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  color: #fff;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 50 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pass-panel .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.pass-panel .close-btn:hover {
+  background: #555;
+}
+
+.best-pass-card {
+  border: 1px solid #ffd700;
+  border-radius: 6px;
+  padding: 12px;
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.best-pass-card h4 {
+  margin: 0 0 10px 0;
+  color: #ffd700;
+  font-size: 15px;
+}
+
+.pass-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.pass-meta {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  line-height: 1.4;
+}
+
+.countdown-pill {
+  margin-top: 10px;
+  padding: 6px;
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.pass-card-mini {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.other-passes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .pass-panel {
+    top: auto;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    max-height: 50vh;
+    border-radius: 16px 16px 0 0;
+    padding-top: 32px;
+    padding-bottom: 24px;
+  }
+
+  .pass-panel::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+  }
+}
+
+/* TIME SLIDER INTEGRATED */
+.time-slider-integrated {
+  background: rgba(30, 144, 255, 0.1);
+  border: 1px solid rgba(30, 144, 255, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.time-slider-integrated input[type="range"] {
+  accent-color: #ffd700;
+}
