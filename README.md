@@ -259,4 +259,4 @@ Potential extensions for future iterations:
 [MIT License](LICENSE)
 
 ## 👨‍🚀 Author
-Developed by **[Your Name]**
+Developed by **Hemal Bhatt**
