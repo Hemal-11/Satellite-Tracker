@@ -105,13 +105,13 @@ graph TD
         Ion[Cesium Ion Assets]
     end
 
-    UI <--> |HTTP GET / Passes / Search| RateLimit
-    Map <--> |Live Orbit Positions| SDK[Browser-side propagate]
+    UI <-->|HTTP GET / Passes / Search| RateLimit
+    Map <-->|Live Orbit Positions| SDK[Browser-side propagate]
     RateLimit --> API
     API --> Propagator
     Propagator <--> Cache
-    Cache <.. |Fetch daily on startup| Celestrak
-    Map .-> |Load Terrain/Imagery| Ion
+    Celestrak -.->|Fetch daily on startup| Cache
+    Map -.->|Load Terrain/Imagery| Ion
 ```
 
 ---
