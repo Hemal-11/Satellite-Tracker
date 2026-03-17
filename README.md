@@ -87,31 +87,31 @@ The system uses a decoupled client-server architecture. The frontend handles 3D 
 
 ```mermaid
 graph TD
-    subgraph Frontend [React / Vite Client]
-        UI[React UI Components]
-        Map[CesiumJS 3D Globe]
-        Sky[Canvas 2D Sky View]
+    subgraph Client
+        UI[React UI]
+        Map[Cesium Globe]
+        Sky[Sky View]
     end
 
-    subgraph Backend [FastAPI Server]
-        API[REST API Router]
+    subgraph Server
+        API[FastAPI]
         RateLimit[Rate Limiter]
-        Propagator[Skyfield SGP4 Engine]
-        Cache[(In-Memory TLE Cache)]
+        Engine[Skyfield SGP4]
+        Cache[(TLE Cache)]
     end
 
-    subgraph External [External Services]
-        Celestrak[Celestrak NORAD TLE Data]
-        Ion[Cesium Ion Assets]
+    subgraph External
+        Celestrak[Celestrak TLEs]
+        Ion[Cesium Assets]
     end
 
-    UI <-->|HTTP GET / Passes / Search| RateLimit
-    Map <-->|Live Orbit Positions| SDK[Browser-side propagate]
+    UI <-->|HTTP GET| RateLimit
+    Map <-->|Orbit Data| UI
     RateLimit --> API
-    API --> Propagator
-    Propagator <--> Cache
-    Celestrak -.->|Fetch daily on startup| Cache
-    Map -.->|Load Terrain/Imagery| Ion
+    API --> Engine
+    Engine <--> Cache
+    Celestrak -.->|Fetch daily| Cache
+    Map -.->|Load Terrain| Ion
 ```
 
 ---
