@@ -4,7 +4,7 @@ import "./App.css";
 import "./logo.css";
 import SkyView from "./SkyView";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "";
+const API_BASE = "https://satellite-tracker-api.onrender.com";
 
 export default function App() {
   const [satellites, setSatellites] = useState([]);

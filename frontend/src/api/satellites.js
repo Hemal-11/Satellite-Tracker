@@ -1,6 +1,6 @@
 // frontend/src/api/satellites.js
 
-const API_BASE = import.meta.env.VITE_API_BASE || "";
+const API_BASE = "https://satellite-tracker-api.onrender.com";
 
 function normalizeSatellite(s) {
   return {
