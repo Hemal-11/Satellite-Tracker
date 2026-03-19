@@ -177,6 +177,12 @@ export default function App() {
           <img src="/premium-logo.png" alt="logo" className="app-logo-mobile" />
           <div className="mobile-title">Satellite Tracker</div>
         </div>
+        <button className="mobile-home-btn" onClick={() => {
+            window.dispatchEvent(new CustomEvent('reset-camera'));
+            setSelectedSatellite(null);
+            setHighlightedNorad(null);
+            setTrackingNorad(null);
+        }}>🏠</button>
       </div>
 
       {/* VIEW TOGGLE */}

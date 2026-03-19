@@ -130,6 +130,15 @@ export default function CesiumMap({
       });
     });
 
+    const handleCustomReset = () => {
+      viewer.camera.flyTo({
+        destination: DEFAULT_CAMERA_VIEW.destination,
+        orientation: DEFAULT_CAMERA_VIEW.orientation,
+        duration: 1.6,
+      });
+    };
+    window.addEventListener('reset-camera', handleCustomReset);
+
 
 
     /* ===== datasource ===== */
@@ -210,7 +219,10 @@ export default function CesiumMap({
       viewer.scene.requestRender();
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
-    return () => handler.destroy();
+    return () => {
+      handler.destroy();
+      window.removeEventListener('reset-camera', handleCustomReset);
+    };
   }, []);
 
   /* =============================

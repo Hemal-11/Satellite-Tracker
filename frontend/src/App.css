@@ -1015,3 +1015,16 @@ body:not(.sky-mode) .sky-view-root {
   margin-left: auto;
   cursor: pointer;
 }
+
+.mobile-home-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 12px;
+  margin-left: auto;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
