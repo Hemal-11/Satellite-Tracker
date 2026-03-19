@@ -182,12 +182,17 @@ export default function App() {
             setSelectedSatellite(null);
             setHighlightedNorad(null);
             setTrackingNorad(null);
-        }}>🏠</button>
+        }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </button>
       </div>
 
       {/* VIEW TOGGLE */}
       <div className="view-toggle">
-        <button className={viewMode === "globe" ? "active" : ""} onClick={() => setViewMode("globe")}>🌍 Globe</button>
+        <button className={viewMode === "globe" ? "active" : ""} onClick={() => setViewMode("globe")}>
+          <svg width="16" height="16" style={{marginRight: '6px', verticalAlign: 'text-bottom'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          Globe
+        </button>
         <button className={viewMode === "sky" || isTransitioningToSky ? "active" : ""} onClick={() => {
           if (viewMode === "sky" || isTransitioningToSky) return;
           setIsTransitioningToSky(true);
@@ -453,11 +458,25 @@ export default function App() {
             <strong>{selectedSatellite.name}</strong>
             <button className="mobile-sat-close-btn" onClick={() => setSelectedSatellite(null)}>✕</button>
           </div>
-          <div className="mobile-sat-details">
+          <div className="mobile-sat-details" style={{ maxHeight: "35vh", overflowY: "auto", paddingRight: "4px" }}>
             <div className="row"><span>NORAD:</span> <span>{selectedSatellite.norad}</span></div>
             <div className="row"><span>Orbit:</span> <span>{selectedSatellite.orbit}</span></div>
+            <div className="row"><span>Category:</span> <span style={{textAlign: "right", maxWidth: "60%"}}>{selectedSatellite.category}</span></div>
+            <div className="row"><span>Confidence:</span> <span>{selectedSatellite.categoryConfidence ?? "N/A"}</span></div>
+            <div className="row"><span>Country:</span> <span>{selectedSatellite.country}</span></div>
+            
+            <hr style={{ borderColor: "rgba(255,255,255,0.15)", margin: "8px 0" }} />
+            
             <div className="row"><span>Altitude:</span> <span>{selectedSatellite.altitudeKm} km</span></div>
             <div className="row"><span>Velocity:</span> <span>{selectedSatellite.velocityKmS} km/s</span></div>
+            {selectedSatellite.inclinationDeg && <div className="row"><span>Inclination:</span> <span>{selectedSatellite.inclinationDeg}°</span></div>}
+            {selectedSatellite.periodMin && <div className="row"><span>Period:</span> <span>{selectedSatellite.periodMin} min</span></div>}
+            {selectedSatellite.launchYear && <div className="row"><span>Launch Year:</span> <span>{selectedSatellite.launchYear}</span></div>}
+            <div className="row"><span>Operator:</span> <span style={{textAlign: "right", maxWidth: "60%"}}>{selectedSatellite.operator ?? "Unknown"}</span></div>
+            
+            <hr style={{ borderColor: "rgba(255,255,255,0.15)", margin: "8px 0" }} />
+            
+            <div className="row"><span>Local Time:</span> <span>{selectedSatellite.localTime}</span></div>
           </div>
           <div className="mobile-sat-actions">
             <button className="primary-btn" onClick={getPasses}>Passes</button>
