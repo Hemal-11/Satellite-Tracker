@@ -205,6 +205,9 @@ export default function App() {
         <div className="sidebar-brand">
           <img src="/premium-logo.png" alt="logo" className="app-logo-sidebar" />
           <h2>Satellite Tracker</h2>
+          {isMobile && (
+            <button className="sidebar-close-btn" onClick={() => setIsSidebarOpen(false)}>✕</button>
+          )}
         </div>
         <input
           className="search-input"
@@ -227,6 +230,7 @@ export default function App() {
                 setHighlightedNorad(target.norad);
                 setSearchResults([]);
                 setSearchQuery("");
+                if (isMobile) setIsSidebarOpen(false);
               }
               e.preventDefault();
             } else if (e.key === "Escape") {
@@ -241,6 +245,7 @@ export default function App() {
             setHighlightedNorad(s.norad);
             setSearchResults([]);
             setSearchQuery("");
+            if (isMobile) setIsSidebarOpen(false);
           }}>
             {s.name.split(new RegExp(`(${searchQuery})`, "gi")).map((part, i) =>
               part.toLowerCase() === searchQuery.toLowerCase() ? (
@@ -259,20 +264,22 @@ export default function App() {
           <strong>Visible:</strong> {visibleSats} rendered
         </div>
 
-        {/* TIME SLIDER PANEL (Integrated) */}
-        <div className="time-slider-integrated">
-          <label style={{ fontWeight: 600 }}>Time Travel: {timeOffsetHours > 0 ? `+${timeOffsetHours}` : timeOffsetHours}h</label>
-          <input 
-            type="range" 
-            min="-12" max="12" step="0.5" 
-            value={timeOffsetHours}
-            onChange={(e) => setTimeOffsetHours(parseFloat(e.target.value))}
-            style={{ width: "100%", margin: "8px 0" }}
-          />
-          {timeOffsetHours !== 0 && (
-             <button className="secondary-btn" onClick={() => setTimeOffsetHours(0)}>Reset to live</button>
-          )}
-        </div>
+        {/* TIME SLIDER PANEL (Integrated for Desktop) */}
+        {!isMobile && (
+          <div className="time-slider-integrated">
+            <label style={{ fontWeight: 600 }}>Time Travel: {timeOffsetHours > 0 ? `+${timeOffsetHours}` : timeOffsetHours}h</label>
+            <input 
+              type="range" 
+              min="-12" max="12" step="0.5" 
+              value={timeOffsetHours}
+              onChange={(e) => setTimeOffsetHours(parseFloat(e.target.value))}
+              style={{ width: "100%", margin: "8px 0" }}
+            />
+            {timeOffsetHours !== 0 && (
+               <button className="secondary-btn" onClick={() => setTimeOffsetHours(0)}>Reset to live</button>
+            )}
+          </div>
+        )}
 
         <h4>Orbit</h4>
         {Object.keys(orbitFilters).map(o => (
@@ -288,7 +295,7 @@ export default function App() {
           </label>
         ))}
 
-        {selectedSatellite && (
+        {selectedSatellite && !isMobile && (
           <>
             <h4>Satellite Info</h4>
             <div className="sat-info">
@@ -406,6 +413,49 @@ export default function App() {
               )}
             </>
           )}
+        </div>
+      )}
+
+      {/* MOBILE FLOATING TIME SLIDER */}
+      {isMobile && (
+         <div className="time-slider-panel mobile-time-slider">
+            <label style={{ fontWeight: 600 }}>Time Travel: {timeOffsetHours > 0 ? `+${timeOffsetHours}` : timeOffsetHours}h</label>
+            <input 
+              type="range" 
+              min="-12" max="12" step="0.5" 
+              value={timeOffsetHours}
+              onChange={(e) => setTimeOffsetHours(parseFloat(e.target.value))}
+            />
+            {timeOffsetHours !== 0 && (
+              <button className="reset-time-btn" onClick={() => setTimeOffsetHours(0)}>Live</button>
+            )}
+         </div>
+      )}
+
+      {/* MOBILE SATELLITE INFO CARD */}
+      {isMobile && selectedSatellite && !showPassPanel && (
+        <div className="mobile-sat-info-card">
+          <div className="mobile-sat-header">
+            <strong>{selectedSatellite.name}</strong>
+            <button className="mobile-sat-close-btn" onClick={() => setSelectedSatellite(null)}>✕</button>
+          </div>
+          <div className="mobile-sat-details">
+            <div className="row"><span>NORAD:</span> <span>{selectedSatellite.norad}</span></div>
+            <div className="row"><span>Orbit:</span> <span>{selectedSatellite.orbit}</span></div>
+            <div className="row"><span>Altitude:</span> <span>{selectedSatellite.altitudeKm} km</span></div>
+            <div className="row"><span>Velocity:</span> <span>{selectedSatellite.velocityKmS} km/s</span></div>
+          </div>
+          <div className="mobile-sat-actions">
+            <button className="primary-btn" onClick={getPasses}>Passes</button>
+            <button className="secondary-btn" onClick={() => {
+                setTrackingNorad(prev => prev === selectedSatellite.norad ? null : selectedSatellite.norad);
+                setIsSidebarOpen(false);
+              }}
+              style={{ margin: 0, backgroundColor: trackingNorad === selectedSatellite.norad ? '#ff4d4d' : 'rgba(255, 255, 255, 0.1)' }}
+            >
+              {trackingNorad === selectedSatellite.norad ? "Stop" : "Track Orbit"}
+            </button>
+          </div>
         </div>
       )}
 
