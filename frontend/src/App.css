@@ -1,3 +1,4 @@
+* { box-sizing: border-box; }
 /* ================================
    GLOBAL RESET
 ================================ */
@@ -908,3 +909,4 @@ body:not(.sky-mode) .sky-view-root {
 .time-slider-integrated input[type="range"] {
   accent-color: #ffd700;
 }
+
