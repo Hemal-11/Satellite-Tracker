@@ -15,7 +15,7 @@ An interactive real-time satellite tracking and orbital visualization platform t
 
 The project combines orbital mechanics, geospatial visualization, and observer-based sky simulation to create a mission-control style interface for understanding satellite motion.
 
-🌍 **Live Demo:** [Add URL after deployment](https://your-live-demo-url.com)
+🌍 **Live Demo:** https://satellite-tracker-live.vercel.app
 
 ---
 
@@ -210,16 +210,6 @@ cp .env.example .env.local
 npm run dev
 ```
 Frontend will be available at: `http://localhost:5173`
-
----
-
-## 🚀 Deployment
-
-When deploying to any production hosting service, you **must** configure the following environment variables for the frontend and backend to communicate securely:
-
-1. **Backend Environment:** Set `ALLOWED_ORIGINS` to exactly match your public frontend URL (e.g., `https://my-satellite-app.com`). This ensures the strict CORS policy allows your frontend to fetch data.
-2. **Frontend Environment:** Set `VITE_API_BASE` to your public backend API URL so React knows where to send requests.
-3. **Backend Hardware:** Ensure your backend host provides at least ~256MB of RAM to hold the 10,000+ Skyfield satellite objects in memory.
 
 ---
 
