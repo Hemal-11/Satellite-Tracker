@@ -910,3 +910,28 @@ body:not(.sky-mode) .sky-view-root {
   accent-color: #ffd700;
 }
 
+
+/* ======================================================
+   ?? EXTREME MOBILE SAFEGUARDS (BYPASS BODY OVERFLOW)
+====================================================== */
+@media (max-width: 900px) {
+  .app-root {
+    position: fixed !important;
+    inset: 0 !important;
+    overflow: hidden !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+  }
+  .sidebar, .mobile-header, .pass-panel, .view-toggle {
+    position: fixed !important;
+  }
+  .search-input {
+    font-size: 16px !important;
+  }
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+}
