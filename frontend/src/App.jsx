@@ -53,6 +53,14 @@ export default function App() {
   const [isTransitioningToSky, setIsTransitioningToSky] = useState(false);
   const touchStartY = useRef(0);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 900);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   /* LOCATION PREFETCH */
   useEffect(() => {
     if (navigator.geolocation && !observerLocation) {
