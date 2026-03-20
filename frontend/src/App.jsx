@@ -495,7 +495,7 @@ export default function App() {
       {/* CESIUM */}
       {viewMode === "globe" && (
         <CesiumMap
-          satellites={window.innerWidth <= 768 ? satellites.slice(0, 1000) : (performanceMode ? satellites.slice(0, 2000) : satellites)}
+          satellites={window.innerWidth <= 768 ? satellites.slice(0, 1000) : (performanceMode ? satellites.slice(0, 5000) : satellites.slice(0, 3000))}
           orbitFilters={orbitFilters}
           categoryFilters={categoryFilters}
           highlightedNorad={highlightedNorad}
