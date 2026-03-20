@@ -1,21 +1,5 @@
 * { box-sizing: border-box; }
 /* ================================
-   GLOBAL RESET
-================================ */
-html,
-body,
-#root {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-.time-slider-panel {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(10, 15, 30, 0.85);
   backdrop-filter: blur(10px);
   padding: 12px 20px;
   border-radius: 12px;
