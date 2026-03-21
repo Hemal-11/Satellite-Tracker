@@ -30,7 +30,7 @@ export default function App() {
   const [countdown, setCountdown] = useState(null);
 
   const [searchIndex, setSearchIndex] = useState(-1);
-  const [performanceMode, setPerformanceMode] = useState(false);
+  const [maxRender, setMaxRender] = useState(() => window.innerWidth <= 900 ? 1500 : 3000);
   const [timeOffsetHours, setTimeOffsetHours] = useState(0);
   const [orbitFilters, setOrbitFilters] = useState({
     LEO: true,
@@ -314,6 +314,22 @@ export default function App() {
           </label>
         ))}
 
+        <div style={{ marginTop: '20px', marginBottom: '10px' }}>
+          <h4>Max Rendered: {maxRender}</h4>
+          <input 
+            type="range" 
+            min="1000" 
+            max="15000" 
+            step="500" 
+            value={maxRender} 
+            onChange={(e) => setMaxRender(parseInt(e.target.value))} 
+            style={{ width: "100%", accentColor: "#ff4d4d" }}
+          />
+          <div style={{ fontSize: "11px", opacity: 0.7, marginTop: "4px" }}>
+            Higher limits may cause 3D rendering lag on slower laptops and mobile devices.
+          </div>
+        </div>
+
         <div style={{ marginTop: '24px', marginBottom: '12px' }}>
           <a 
             href="https://forms.gle/HooJCdeXVo3WubwS8" 
@@ -507,7 +523,7 @@ export default function App() {
       {/* CESIUM */}
       {viewMode === "globe" && (
         <CesiumMap
-          satellites={window.innerWidth <= 768 ? satellites.slice(0, 1000) : (performanceMode ? satellites.slice(0, 5000) : satellites.slice(0, 3000))}
+          satellites={satellites.slice(0, maxRender)}
           orbitFilters={orbitFilters}
           categoryFilters={categoryFilters}
           highlightedNorad={highlightedNorad}
