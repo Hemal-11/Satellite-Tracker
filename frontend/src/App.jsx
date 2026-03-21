@@ -314,6 +314,18 @@ export default function App() {
           </label>
         ))}
 
+        <div style={{ marginTop: '24px', marginBottom: '12px' }}>
+          <a 
+            href="https://forms.gle/HooJCdeXVo3WubwS8" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="secondary-btn" 
+            style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'rgba(30, 144, 255, 0.2)', borderColor: 'rgba(30, 144, 255, 0.4)' }}
+          >
+            🐛 Report Bug / Feedback
+          </a>
+        </div>
+
         {selectedSatellite && !isMobile && (
           <>
             <h4>Satellite Info</h4>
