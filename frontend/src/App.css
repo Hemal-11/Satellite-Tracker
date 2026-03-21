@@ -1027,3 +1027,23 @@ body:not(.sky-mode) .sky-view-root {
     border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 }
+
+/* ======================================================
+   ?? MOBILE DENSITY & NAV BAR PATCH (OVERRIDES)
+====================================================== */
+@media (max-width: 900px) {
+  .mobile-sat-info-card {
+    padding: 12px !important;
+    gap: 8px !important;
+  }
+  .mobile-sat-details .row {
+    font-size: 13px !important;
+    padding: 2px 0 !important;
+  }
+  .mobile-home-btn {
+    background: transparent !important;
+    color: white !important;
+    padding: 0 4px 0 16px !important;
+    margin-right: -4px !important;
+  }
+}

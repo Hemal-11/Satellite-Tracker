@@ -486,7 +486,7 @@ export default function App() {
             <strong>{selectedSatellite.name}</strong>
             <button className="mobile-sat-close-btn" onClick={() => setSelectedSatellite(null)}>✕</button>
           </div>
-          <div className="mobile-sat-details" style={{ maxHeight: "35vh", overflowY: "auto", paddingRight: "4px" }}>
+          <div className="mobile-sat-details" style={{ maxHeight: "22vh", overflowY: "auto", paddingRight: "4px" }}>
             <div className="row"><span>NORAD:</span> <span>{selectedSatellite.norad}</span></div>
             <div className="row"><span>Orbit:</span> <span>{selectedSatellite.orbit}</span></div>
             <div className="row"><span>Category:</span> <span style={{textAlign: "right", maxWidth: "60%"}}>{selectedSatellite.category}</span></div>
