@@ -447,8 +447,20 @@ export default function CesiumMap({
       const positions = [];
       
       const realNow = new Date();
-      // Generate -60 to +60 in 2 min increments
-      for(let m = -60; m <= 60; m += 2) {
+      
+      // Calculate period in minutes from mean motion (satrec.no is in rad/min)
+      // If mean motion is 0 or invalid, fallback to 100 minutes
+      const meanMotionRadPerMin = satrec.no || (2 * Math.PI / 100);
+      const periodMinutes = (2 * Math.PI) / meanMotionRadPerMin;
+      
+      // Generate full orbit: -50% to +50% of the period
+      const halfPeriod = periodMinutes / 2;
+      
+      // Dynamic step size to prevent massive point arrays for GEO satellites
+      // Default to 2 mins for LEO, more for higher orbits (up to 15 mins for GEO)
+      const stepMinutes = Math.max(1, Math.min(periodMinutes / 100, 15));
+      
+      for(let m = -halfPeriod; m <= halfPeriod; m += stepMinutes) {
           const jsDate = new Date(realNow.getTime() + m * 60000);
           const pv = satellite.propagate(satrec, jsDate);
           if (pv.position && typeof pv.position.x === 'number') {
