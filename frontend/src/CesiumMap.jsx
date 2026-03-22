@@ -269,8 +269,18 @@ export default function CesiumMap({
       const norad = Number(sat.norad);
       const isISS = norad === ISS_NORAD;
 
+      let lastCalcTime = null;
+      let lastCalcPos = initialPos;
+
       const positionProperty = new Cesium.CallbackProperty((time) => {
         if (!satrec) return initialPos;
+        
+        // Throttle updates to ~every 2 seconds to drastically reduce CPU load
+        if (lastCalcTime && Math.abs(Cesium.JulianDate.secondsDifference(time, lastCalcTime)) < 2.0) {
+          return lastCalcPos;
+        }
+
+        lastCalcTime = time;
         const jsDate = Cesium.JulianDate.toDate(time);
         try {
           const pv = satellite.propagate(satrec, jsDate);
@@ -280,7 +290,8 @@ export default function CesiumMap({
             const lon = Cesium.Math.toDegrees(gd.longitude);
             const lat = Cesium.Math.toDegrees(gd.latitude);
             const alt = gd.height * 1000;
-            return Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+            lastCalcPos = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+            return lastCalcPos;
           }
         } catch (e) {}
         return initialPos;

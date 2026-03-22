@@ -247,6 +247,7 @@ export default function App() {
               const target = searchIndex >= 0 ? searchResults[searchIndex] : searchResults[0];
               if (target) {
                 setHighlightedNorad(target.norad);
+                setSelectedSatellite(target);
                 setSearchResults([]);
                 setSearchQuery("");
                 if (isMobile) setIsSidebarOpen(false);
@@ -262,6 +263,7 @@ export default function App() {
         {searchResults.map((s, idx) => (
           <div key={s.norad} className={`search-item ${idx === searchIndex ? "selected" : ""}`} onClick={() => {
             setHighlightedNorad(s.norad);
+            setSelectedSatellite(s);
             setSearchResults([]);
             setSearchQuery("");
             if (isMobile) setIsSidebarOpen(false);
@@ -283,67 +285,8 @@ export default function App() {
           <strong>Visible:</strong> {visibleSats} rendered
         </div>
 
-        {/* TIME SLIDER PANEL (Integrated for Desktop) */}
-        {!isMobile && (
-          <div className="time-slider-integrated">
-            <label style={{ fontWeight: 600 }}>Time Travel: {timeOffsetHours > 0 ? `+${timeOffsetHours}` : timeOffsetHours}h</label>
-            <input 
-              type="range" 
-              min="-12" max="12" step="0.5" 
-              value={timeOffsetHours}
-              onChange={(e) => setTimeOffsetHours(parseFloat(e.target.value))}
-              style={{ width: "100%", margin: "8px 0" }}
-            />
-            {timeOffsetHours !== 0 && (
-               <button className="secondary-btn" onClick={() => setTimeOffsetHours(0)}>Reset to live</button>
-            )}
-          </div>
-        )}
-
-        <h4>Orbit</h4>
-        {Object.keys(orbitFilters).map(o => (
-          <label key={o}>
-            <input type="checkbox" checked={orbitFilters[o]} onChange={() => setOrbitFilters(p => ({ ...p, [o]: !p[o] }))} /> {o}
-          </label>
-        ))}
-
-        <h4>Category</h4>
-        {Object.keys(categoryFilters).map(c => (
-          <label key={c}>
-            <input type="checkbox" checked={categoryFilters[c]} onChange={() => setCategoryFilters(p => ({ ...p, [c]: !p[c] }))} /> {c}
-          </label>
-        ))}
-
-        <div style={{ marginTop: '20px', marginBottom: '10px' }}>
-          <h4>Max Rendered: {maxRender}</h4>
-          <input 
-            type="range" 
-            min="1000" 
-            max="15000" 
-            step="500" 
-            value={maxRender} 
-            onChange={(e) => setMaxRender(parseInt(e.target.value))} 
-            style={{ width: "100%", accentColor: "#ff4d4d" }}
-          />
-          <div style={{ fontSize: "11px", opacity: 0.7, marginTop: "4px" }}>
-            Higher limits may cause 3D rendering lag on slower laptops and mobile devices.
-          </div>
-        </div>
-
-        <div style={{ marginTop: '24px', marginBottom: '12px' }}>
-          <a 
-            href="https://forms.gle/HooJCdeXVo3WubwS8" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="secondary-btn" 
-            style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'rgba(30, 144, 255, 0.2)', borderColor: 'rgba(30, 144, 255, 0.4)' }}
-          >
-            🐛 Report Bug / Feedback
-          </a>
-        </div>
-
         {selectedSatellite && !isMobile && (
-          <>
+          <div style={{ marginTop: "16px", marginBottom: "16px", background: "rgba(0,0,0,0.3)", borderRadius: "8px", padding: "12px", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h4>Satellite Info</h4>
             <div className="sat-info">
               <strong>{selectedSatellite.name}</strong>
@@ -379,8 +322,55 @@ export default function App() {
                 </button>
               </div>
             </div>
-          </>
+          </div>
         )}
+
+        {/* TIME SLIDER PANEL (Integrated for Desktop) */}
+        {!isMobile && (
+          <div className="time-slider-integrated">
+            <label style={{ fontWeight: 600 }}>Time Travel: {timeOffsetHours > 0 ? `+${timeOffsetHours}` : timeOffsetHours}h</label>
+            <input 
+              type="range" 
+              min="-12" max="12" step="0.5" 
+              value={timeOffsetHours}
+              onChange={(e) => setTimeOffsetHours(parseFloat(e.target.value))}
+              style={{ width: "100%", margin: "8px 0" }}
+            />
+            {timeOffsetHours !== 0 && (
+               <button className="secondary-btn" onClick={() => setTimeOffsetHours(0)}>Reset to live</button>
+            )}
+          </div>
+        )}
+
+        <h4>Orbit</h4>
+        {Object.keys(orbitFilters).map(o => (
+          <label key={o}>
+            <input type="checkbox" checked={orbitFilters[o]} onChange={() => setOrbitFilters(p => ({ ...p, [o]: !p[o] }))} /> {o}
+          </label>
+        ))}
+
+        <h4>Category</h4>
+        {Object.keys(categoryFilters).map(c => (
+          <label key={c}>
+            <input type="checkbox" checked={categoryFilters[c]} onChange={() => setCategoryFilters(p => ({ ...p, [c]: !p[c] }))} /> {c}
+          </label>
+        ))}
+
+        <div style={{ marginTop: '20px', marginBottom: '30px' }}>
+          <h4>Max Rendered: {maxRender}</h4>
+          <input 
+            type="range" 
+            min="1000" 
+            max="15000" 
+            step="500" 
+            value={maxRender} 
+            onChange={(e) => setMaxRender(parseInt(e.target.value))} 
+            style={{ width: "100%", accentColor: "#ff4d4d" }}
+          />
+          <div style={{ fontSize: "11px", opacity: 0.7, marginTop: "4px" }}>
+            Higher limits may cause 3D rendering lag on slower laptops and mobile devices.
+          </div>
+        </div>
       </div>
 
       {/* PASS PANEL — RESTORED */}
@@ -547,6 +537,16 @@ export default function App() {
           <SkyView observerLocation={observerLocation} bestPass={bestPass} />
         </div>
       )}
+
+      {/* FLOATING REPORT BUTTON */}
+      <a 
+        href="https://forms.gle/HooJCdeXVo3WubwS8" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="floating-report-btn" 
+      >
+        🐛 Report Bug / Feedback
+      </a>
     </div>
   );
 }
