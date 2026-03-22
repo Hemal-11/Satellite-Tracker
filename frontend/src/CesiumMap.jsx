@@ -280,7 +280,9 @@ export default function CesiumMap({
           return lastCalcPos;
         }
 
-        lastCalcTime = time;
+        // Must clone `time` because Cesium reuses the same JulianDate object memory each frame!
+        lastCalcTime = Cesium.JulianDate.clone(time);
+        
         const jsDate = Cesium.JulianDate.toDate(time);
         try {
           const pv = satellite.propagate(satrec, jsDate);
@@ -290,11 +292,14 @@ export default function CesiumMap({
             const lon = Cesium.Math.toDegrees(gd.longitude);
             const lat = Cesium.Math.toDegrees(gd.latitude);
             const alt = gd.height * 1000;
-            lastCalcPos = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+            // Only update position if we got a valid number
+            if (!isNaN(lon) && !isNaN(lat) && !isNaN(alt)) {
+               lastCalcPos = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+            }
             return lastCalcPos;
           }
         } catch (e) {}
-        return initialPos;
+        return lastCalcPos;
       }, false);
 
       const entity = ds.entities.add({
@@ -451,14 +456,18 @@ export default function CesiumMap({
       // Calculate period in minutes from mean motion (satrec.no is in rad/min)
       // If mean motion is 0 or invalid, fallback to 100 minutes
       const meanMotionRadPerMin = satrec.no || (2 * Math.PI / 100);
-      const periodMinutes = (2 * Math.PI) / meanMotionRadPerMin;
+      let periodMinutes = Math.abs((2 * Math.PI) / meanMotionRadPerMin);
+      
+      // CAP THE PERIOD to 24 hours (1440 minutes) to prevent infinite loops / browser freeze
+      if (!isFinite(periodMinutes) || periodMinutes > 1440) {
+          periodMinutes = 1440;
+      }
       
       // Generate full orbit: -50% to +50% of the period
       const halfPeriod = periodMinutes / 2;
       
-      // Dynamic step size to prevent massive point arrays for GEO satellites
-      // Default to 2 mins for LEO, more for higher orbits (up to 15 mins for GEO)
-      const stepMinutes = Math.max(1, Math.min(periodMinutes / 100, 15));
+      // Dynamic step size to guarantee a maximum of ~150 calculation points
+      const stepMinutes = Math.max(1, periodMinutes / 150);
       
       for(let m = -halfPeriod; m <= halfPeriod; m += stepMinutes) {
           const jsDate = new Date(realNow.getTime() + m * 60000);
