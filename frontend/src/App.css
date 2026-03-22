@@ -1047,3 +1047,45 @@ body:not(.sky-mode) .sky-view-root {
     margin-right: -4px !important;
   }
 }
+
+/* ======================================================
+   🔥 NEW FLOATING REPORT BUTTON
+====================================================== */
+.floating-report-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(30, 40, 60, 0.9);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.floating-report-btn:hover {
+  background: rgba(40, 50, 80, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+@media (max-width: 900px) {
+  .floating-report-btn {
+    bottom: 12px;
+    right: 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+}
