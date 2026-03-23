@@ -513,7 +513,14 @@ export default function App() {
       {/* CESIUM */}
       {viewMode === "globe" && (
         <CesiumMap
-          satellites={satellites.slice(0, maxRender)}
+          satellites={(() => {
+            const sliced = satellites.slice(0, maxRender);
+            // Guarantee that if a user searches for a satellite, it GETS rendered!
+            if (selectedSatellite && !sliced.some(s => s.norad === selectedSatellite.norad)) {
+              return [...sliced, selectedSatellite];
+            }
+            return sliced;
+          })()}
           orbitFilters={orbitFilters}
           categoryFilters={categoryFilters}
           highlightedNorad={highlightedNorad}
