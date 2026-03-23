@@ -5,27 +5,28 @@ import cesium from "vite-plugin-cesium";
 export default defineConfig({
   plugins: [react(), cesium()],
   server: {
-    port: 5173,
+    port: 5199,
+    strictPort: true,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:8000",
+        target: "https://satellite-tracker-api.onrender.com",
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       "/search": {
-        target: "http://127.0.0.1:8000",
+        target: "https://satellite-tracker-api.onrender.com",
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       "/satellite": {
-        target: "http://127.0.0.1:8000",
+        target: "https://satellite-tracker-api.onrender.com",
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       "/observer": {
-        target: "http://127.0.0.1:8000",
+        target: "https://satellite-tracker-api.onrender.com",
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },

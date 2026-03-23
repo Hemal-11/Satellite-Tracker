@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 /* ======================================================
    FALLBACK SYNTHETIC ARC
 ====================================================== */
-const API_BASE = "https://satellite-tracker-api.onrender.com";
+const API_BASE = import.meta.env.DEV ? "" : "https://satellite-tracker-api.onrender.com";
 
 function generateSyntheticArc(bestPass, radius, cx, cy) {
   const points = [];
