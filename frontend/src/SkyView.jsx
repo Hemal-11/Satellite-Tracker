@@ -17,6 +17,8 @@ import { useEffect, useRef, useState } from "react";
 /* ======================================================
    FALLBACK SYNTHETIC ARC
 ====================================================== */
+const API_BASE = "https://satellite-tracker-api.onrender.com";
+
 function generateSyntheticArc(bestPass, radius, cx, cy) {
   const points = [];
   const azCenter = bestPass.azimuth_deg;
@@ -77,9 +79,8 @@ export default function SkyView({ observerLocation, bestPass }) {
   useEffect(() => {
     if (!bestPass || !observerLocation) return;
 
-    // NOTE: backend endpoint that actually exists
     fetch(
-      `/satellite/${bestPass.norad ?? ""}/pass-path?lat=${observerLocation.lat}&lon=${observerLocation.lon}`
+      `${API_BASE}/satellite/${bestPass.norad ?? ""}/pass-path?lat=${observerLocation.lat}&lon=${observerLocation.lon}`
     )
       .then((r) => r.json())
       .then((data) => {
@@ -98,9 +99,10 @@ export default function SkyView({ observerLocation, bestPass }) {
   useEffect(() => {
     if (!observerLocation) return;
 
-    const interval = setInterval(() => {
+    // Immediately fetch when opened
+    const fetchLiveSats = () => {
       fetch(
-        `/observer/sky?lat=${observerLocation.lat}&lon=${observerLocation.lon}`
+        `${API_BASE}/observer/sky?lat=${observerLocation.lat}&lon=${observerLocation.lon}`
       )
         .then((r) => r.json())
         .then((data) => {
@@ -111,7 +113,10 @@ export default function SkyView({ observerLocation, bestPass }) {
           }
         })
         .catch(() => setLiveSats([]));
-    }, 3000);
+    };
+    
+    fetchLiveSats();
+    const interval = setInterval(fetchLiveSats, 3000);
 
     return () => clearInterval(interval);
   }, [observerLocation]);
