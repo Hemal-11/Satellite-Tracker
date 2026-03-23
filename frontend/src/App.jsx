@@ -52,6 +52,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState("globe");
   const [isTransitioningToSky, setIsTransitioningToSky] = useState(false);
   const touchStartY = useRef(0);
+  const [apiError, setApiError] = useState(null);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
 
@@ -80,10 +81,18 @@ export default function App() {
   /* LOAD SATS */
   useEffect(() => {
     fetch(`${API_BASE}/api/tle/all`)
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error("API response not ok");
+        return r.json();
+      })
       .then((data) => {
         setSatellites(data);
         setTotalSats(data.length);
+        setApiError(null);
+      })
+      .catch((err) => {
+         console.error("Failed to fetch TLEs:", err);
+         setApiError("The central database is currently waking up from sleep (Render.com free tier spins down after 15 minutes of inactivity). Please wait about 50 seconds and then refresh the page!");
       });
 
     fetch(`${API_BASE}/api/stats`)
@@ -554,6 +563,27 @@ export default function App() {
       >
         🐛 Report Bug / Feedback
       </a>
+
+      {apiError && (
+        <div style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "rgba(220, 20, 60, 0.95)",
+          color: "white",
+          padding: "24px 32px",
+          borderRadius: "12px",
+          zIndex: 9999,
+          textAlign: "center",
+          boxShadow: "0 10px 40px rgba(0,0,0,0.6)",
+          maxWidth: "80%",
+          backdropFilter: "blur(10px)"
+        }}>
+          <h3 style={{ margin: "0 0 12px 0", fontSize: "20px" }}>⏳ Database Waking Up</h3>
+          <p style={{ margin: 0, fontSize: "15px", lineHeight: "1.5" }}>{apiError}</p>
+        </div>
+      )}
     </div>
   );
 }
