@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { Analytics } from "@vercel/analytics/react";
 
 import * as Cesium from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
@@ -10,5 +11,8 @@ Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 window.CESIUM_BASE_URL = "/cesium";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <App />
+  <>
+    <App />
+    <Analytics />
+  </>
 );
