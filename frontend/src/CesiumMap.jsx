@@ -56,6 +56,8 @@ export default function CesiumMap({
 
   // Bonus Features Flags
   const ENABLE_NIGHT_LIGHTS = false; // Toggle to false to easily remove city lights
+  const SAT_THROTTLE_MS = 3.0; // seconds between position recalculations for normal sats
+  const SAT_THROTTLE_FOCUSED_MS = 1.5; // faster update for highlighted/tracked sat
 
   useEffect(() => {
     highlightedRef.current = highlightedNorad;
@@ -113,6 +115,10 @@ export default function CesiumMap({
     c.minimumZoomDistance = 5_000_000;
     c.maximumZoomDistance = 90_000_000;
     c.enableCollisionDetection = true;
+
+    /* ===== smooth render loop (avoids per-frame requestRender spam) ===== */
+    viewer.useDefaultRenderLoop = true;
+    viewer.scene.requestRenderMode = false;
 
     /* ===== initial camera view ===== */
     viewer.camera.setView(DEFAULT_CAMERA_VIEW);
@@ -274,15 +280,19 @@ export default function CesiumMap({
 
       const positionProperty = new Cesium.CallbackProperty((time) => {
         if (!satrec) return initialPos;
-        
-        // Throttle updates to ~every 2 seconds to drastically reduce CPU load
-        if (lastCalcTime && Math.abs(Cesium.JulianDate.secondsDifference(time, lastCalcTime)) < 2.0) {
+
+        // Use faster throttle for ISS and highlighted/tracked satellites,
+        // slower throttle for all others to dramatically reduce jitter + CPU load
+        const isFocused = isISS || norad === highlightedRef.current;
+        const throttle = isFocused ? SAT_THROTTLE_FOCUSED_MS : SAT_THROTTLE_MS;
+
+        if (lastCalcTime && Math.abs(Cesium.JulianDate.secondsDifference(time, lastCalcTime)) < throttle) {
           return lastCalcPos;
         }
 
         // Must clone `time` because Cesium reuses the same JulianDate object memory each frame!
         lastCalcTime = Cesium.JulianDate.clone(time);
-        
+
         const jsDate = Cesium.JulianDate.toDate(time);
         try {
           const pv = satellite.propagate(satrec, jsDate);
@@ -292,9 +302,9 @@ export default function CesiumMap({
             const lon = Cesium.Math.toDegrees(gd.longitude);
             const lat = Cesium.Math.toDegrees(gd.latitude);
             const alt = gd.height * 1000;
-            // Only update position if we got a valid number
+            // Only update if we got a valid position
             if (!isNaN(lon) && !isNaN(lat) && !isNaN(alt)) {
-               lastCalcPos = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+              lastCalcPos = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
             }
             return lastCalcPos;
           }
@@ -658,7 +668,8 @@ export default function CesiumMap({
       polyline: {
         positions: buildTerminator(),
         width: 1,
-        material: Cesium.Color.BLUE.withAlpha(0.2),
+        // Reduced opacity — was 0.2, users reported "blue ball" appearance
+        material: Cesium.Color.fromCssColorString("#6699ff").withAlpha(0.12),
       },
     });
 

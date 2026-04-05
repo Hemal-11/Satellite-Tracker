@@ -1089,3 +1089,101 @@ body:not(.sky-mode) .sky-view-root {
     border-radius: 6px;
   }
 }
+
+/* ======================================================
+   FEEDBACK FIX --- BEST PASS CLICKABLE CARD
+====================================================== */
+.best-pass-clickable {
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.best-pass-clickable:hover {
+  border-color: rgba(255, 215, 0, 0.85) !important;
+  background: rgba(255, 215, 0, 0.14) !important;
+  transform: translateY(-1px);
+}
+
+.best-pass-clickable:active {
+  transform: scale(0.98);
+}
+
+/* ======================================================
+   FEEDBACK FIX --- SIDEBAR SECTION HEADERS
+====================================================== */
+.sidebar h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 14px 0 6px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  transition: color 0.15s ease;
+}
+
+.sidebar h4:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ======================================================
+   FEEDBACK FIX --- MOBILE REPORT BUTTON POSITION
+====================================================== */
+@media (max-width: 900px) {
+  .floating-report-btn {
+    bottom: 76px !important;
+    right: 12px;
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+}
+
+/* ======================================================
+   FEEDBACK FIX --- BUTTON HOVER POLISH
+====================================================== */
+.primary-btn {
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.primary-btn:hover {
+  background: #3aa0ff;
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ======================================================
+   FEEDBACK FIX --- SIDEBAR BRAND POLISH
+====================================================== */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-brand h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #a0c4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ======================================================
+   FEEDBACK FIX --- FILTER LABEL FADE-IN ANIMATION
+====================================================== */
+.sidebar label {
+  animation: labelFadeIn 0.15s ease;
+}
+
+@keyframes labelFadeIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

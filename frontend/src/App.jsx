@@ -53,6 +53,8 @@ export default function App() {
   const [isTransitioningToSky, setIsTransitioningToSky] = useState(false);
   const touchStartY = useRef(0);
   const [apiError, setApiError] = useState(null);
+  const [orbitFilterOpen, setOrbitFilterOpen] = useState(true);
+  const [categoryFilterOpen, setCategoryFilterOpen] = useState(false);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
 
@@ -140,7 +142,7 @@ export default function App() {
   const getPasses = () => {
     if (!selectedSatellite) return;
     if (!navigator.geolocation) {
-      setPassError("Geolocation not supported by his browser.");
+      setPassError("Geolocation not supported by your browser.");
       return;
     }
     setLoadingPasses(true);
@@ -222,7 +224,7 @@ export default function App() {
              setTimeout(() => {
                setViewMode("sky");
                setIsTransitioningToSky(false);
-             }, 300);
+             }, 500);
           }
 
         }} disabled={isTransitioningToSky}>🌌 Sky</button>
@@ -351,15 +353,25 @@ export default function App() {
           </div>
         )}
 
-        <h4>Orbit</h4>
-        {Object.keys(orbitFilters).map(o => (
+        <h4
+          onClick={() => setOrbitFilterOpen(v => !v)}
+          style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', userSelect: 'none' }}
+        >
+          Orbit <span style={{ fontSize: '10px', opacity: 0.6 }}>{orbitFilterOpen ? '▲' : '▼'}</span>
+        </h4>
+        {orbitFilterOpen && Object.keys(orbitFilters).map(o => (
           <label key={o}>
             <input type="checkbox" checked={orbitFilters[o]} onChange={() => setOrbitFilters(p => ({ ...p, [o]: !p[o] }))} /> {o}
           </label>
         ))}
 
-        <h4>Category</h4>
-        {Object.keys(categoryFilters).map(c => (
+        <h4
+          onClick={() => setCategoryFilterOpen(v => !v)}
+          style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', userSelect: 'none', marginTop: '12px' }}
+        >
+          Category <span style={{ fontSize: '10px', opacity: 0.6 }}>{categoryFilterOpen ? '▲' : '▼'}</span>
+        </h4>
+        {categoryFilterOpen && Object.keys(categoryFilters).map(c => (
           <label key={c}>
             <input type="checkbox" checked={categoryFilters[c]} onChange={() => setCategoryFilters(p => ({ ...p, [c]: !p[c] }))} /> {c}
           </label>
@@ -405,8 +417,18 @@ export default function App() {
           ) : (
             <>
               {bestPass && (
-                <div className="best-pass-card">
-                  <h4>⭐ Best pass today</h4>
+                <div
+                  className="best-pass-card best-pass-clickable"
+                  onClick={() => {
+                    if (selectedSatellite) {
+                      setHighlightedNorad(selectedSatellite.norad);
+                      setShowPassPanel(false);
+                      if (viewMode !== 'globe') setViewMode('globe');
+                    }
+                  }}
+                  title="Click to fly to this satellite on the globe"
+                >
+                  <h4>⭐ Best pass today <span style={{ fontSize: '11px', opacity: 0.7, fontWeight: 400 }}>· click to track →</span></h4>
                   <div className="pass-details">
                     <div>
                       🌎 Rise: {new Date(bestPass.rise).toLocaleTimeString()}
@@ -549,7 +571,7 @@ export default function App() {
 
       {/* SKY */}
       {(viewMode === "sky" || isTransitioningToSky) && observerLocation && (
-        <div className="sky-view-root" style={{ opacity: viewMode === "sky" ? 1 : 0, transition: "opacity 0.3s ease-in-out", pointerEvents: viewMode === "sky" ? "auto" : "none" }}>
+        <div className="sky-view-root" style={{ opacity: viewMode === "sky" ? 1 : 0, transition: "opacity 0.5s ease-in-out", pointerEvents: viewMode === "sky" ? "auto" : "none" }}>
           <SkyView observerLocation={observerLocation} bestPass={bestPass} />
         </div>
       )}
