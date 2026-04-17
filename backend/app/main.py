@@ -246,7 +246,7 @@ async def startup_event():
     raw = fetch_tle_from_celestrak()
 
     if not raw.strip():
-        print("❌ No TLE data available — starting with empty dataset")
+        print("[ERROR] No TLE data available — starting with empty dataset")
         SAT_CACHE = {}
         SAT_INDEX = []
         return
