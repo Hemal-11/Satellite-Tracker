@@ -33,7 +33,7 @@ def fetch_celestrak_catalog():
     Returns { norad_id: country_code }
     """
     try:
-        resp = requests.get(SATCAT_CSV_URL, headers=HEADERS, stream=True, timeout=(5, 30))
+        resp = requests.get(SATCAT_CSV_URL, headers=HEADERS, stream=True, timeout=(10, 60))
         resp.raise_for_status()
 
         catalog = {}
@@ -124,7 +124,7 @@ def _try_fetch_tle(url: str, label: str) -> str:
     Returns non-empty string only when we got real fresh data.
     """
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=(10, 30))
+        resp = requests.get(url, headers=HEADERS, timeout=(20, 90))
 
         # Celestrak 403 = "data hasn't changed since your last download"
         # This is NOT a real error — just means use the cached copy.
@@ -154,16 +154,24 @@ def fetch_tle_from_celestrak() -> str:
 
     Priority order:
     1. Live fetch from Celestrak full active catalog
-    2. Live fetch from Celestrak stations group (smaller, more reliable)
-    3. Live fetch from Celestrak Starlink group
-    4. Disk cache (from previous successful fetch)
-    5. Embedded static fallback (ISS, Starlink, NOAA — 3 sats)
+    2. Disk cache (if live fetch fails/timeouts, use last successful 9k-sat download)
+    3. Live fetch from Celestrak stations group (smaller, more reliable fallback)
+    4. Live fetch from Celestrak Starlink group
+    5. Embedded static fallback (ISS, DMSP, METEOSAT — 3 sats)
     """
-    # Attempt live fetches
+    # 1. Attempt live fetch of ALL active satellites
     data = _try_fetch_tle(ACTIVE_TLE_URL, "Celestrak active")
     if data:
         return data
 
+    # 2. If active fails (timeout or 403), try disk cache immediately.
+    #    A stale cache of 9,500 satellites is much better than a fresh fetch of 30 stations.
+    cached = _load_tle_cache()
+    if cached:
+        print("[CACHE] Using cached TLE data from previous successful fetch")
+        return cached
+
+    # 3. If no cache exists (e.g. fresh deploy), gracefully degrade to smaller live fetches
     data = _try_fetch_tle(ACTIVE_TLE_URL2, "Celestrak stations")
     if data:
         return data
@@ -172,13 +180,7 @@ def fetch_tle_from_celestrak() -> str:
     if data:
         return data
 
-    # Fall back to disk cache (contains last successful full 15k-sat download)
-    cached = _load_tle_cache()
-    if cached:
-        print("[CACHE] Using cached TLE data from previous successful fetch")
-        return cached
-
-    # Absolute last resort
+    # 4. Absolute last resort
     print("[WARNING] All TLE sources failed and no cache found — using embedded fallback (3 satellites)")
     return _EMBEDDED_FALLBACK_TLE
 
